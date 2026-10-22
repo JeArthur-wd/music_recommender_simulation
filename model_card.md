@@ -52,7 +52,7 @@ The recommender works like a judge giving points to every song in the catalog, o
 
 **Size:** 20 songs in `data/songs.csv`. The starter file had 10. I added 10 more (generated with AI help) to cover genres and moods that were missing, especially sad, quiet and very loud songs.
 
-**Features per song:** title, artist, genre, mood, energy, tempo (BPM), valence (happiness), danceability and acousticness. Everything except tempo is on a 0–1 scale.
+**Features per song:** title, artist, genre, mood, energy, tempo (BPM), valence (happiness), danceability and acousticness. Everything except tempo is on a 0–1 scale. As a stretch feature, I later added five more columns: popularity (0–100), release decade, mood tags (like "nostalgic" or "nocturnal"), instrumentalness and speechiness. They only count when a profile asks for them, so every result in this card is unchanged.
 
 **Coverage:**
 - **17 genres:** lofi (3), pop (2), and one song each for rock, ambient, jazz, synthwave, indie pop, folk, hip-hop, r&b, metal, classical, country, edm, reggae, blues and k-pop.

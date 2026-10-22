@@ -1,21 +1,21 @@
-id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Broken Compass,Ash Hollow,folk,melancholic,0.25,68,0.22,0.35,0.90
-12,Concrete Crown,Kairo Vex,hip-hop,confident,0.78,95,0.58,0.86,0.08
-13,Velvet Hours,Luna Marie,r&b,romantic,0.48,88,0.62,0.70,0.40
-14,Iron Tempest,Grave Signal,metal,angry,0.97,168,0.18,0.45,0.03
-15,Moonlit Sonata No. 2,Elise Varga,classical,peaceful,0.15,58,0.38,0.20,0.97
-16,Dirt Road Summer,Wade Callahan,country,nostalgic,0.58,104,0.74,0.64,0.62
-17,Pulse Reactor,Kinetica,edm,energetic,0.95,128,0.70,0.92,0.02
-18,Island Breeze,Tide Kings,reggae,uplifting,0.55,82,0.85,0.78,0.45
-19,Empty Platform,Grey Avenue,blues,sad,0.30,70,0.15,0.40,0.75
-20,Glass Heartbeat,Starlit Vow,k-pop,euphoric,0.85,126,0.90,0.85,0.12
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness,popularity,release_decade,mood_tags,instrumentalness,speechiness
+1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18,78,2020,happy;sunny;uplifting,0.02,0.05
+2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71,45,2020,chill;nocturnal;focused,0.85,0.04
+3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10,62,2010,intense;aggressive;driving,0.1,0.06
+4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86,38,2020,chill;rainy;cozy,0.9,0.03
+5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05,81,2020,intense;motivational;euphoric,0.01,0.08
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92,22,2010,dreamy;floating;peaceful,0.95,0.02
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89,30,2000,relaxed;cozy;warm,0.75,0.04
+8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22,55,2010,moody;nostalgic;nocturnal,0.7,0.03
+9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78,41,2020,focused;calm;steady,0.88,0.03
+10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35,66,2010,happy;dreamy;carefree,0.05,0.05
+11,Broken Compass,Ash Hollow,folk,melancholic,0.25,68,0.22,0.35,0.90,27,2010,melancholic;nostalgic;lonely,0.15,0.04
+12,Concrete Crown,Kairo Vex,hip-hop,confident,0.78,95,0.58,0.86,0.08,84,2020,confident;swagger;aggressive,0.0,0.38
+13,Velvet Hours,Luna Marie,r&b,romantic,0.48,88,0.62,0.70,0.40,70,2010,romantic;sensual;smooth,0.03,0.09
+14,Iron Tempest,Grave Signal,metal,angry,0.97,168,0.18,0.45,0.03,35,2000,angry;aggressive;dark,0.2,0.1
+15,Moonlit Sonata No. 2,Elise Varga,classical,peaceful,0.15,58,0.38,0.20,0.97,18,1980,peaceful;dreamy;melancholic,0.98,0.02
+16,Dirt Road Summer,Wade Callahan,country,nostalgic,0.58,104,0.74,0.64,0.62,72,2000,nostalgic;warm;carefree,0.02,0.05
+17,Pulse Reactor,Kinetica,edm,energetic,0.95,128,0.70,0.92,0.02,76,2010,energetic;euphoric;driving,0.8,0.04
+18,Island Breeze,Tide Kings,reggae,uplifting,0.55,82,0.85,0.78,0.45,58,1990,uplifting;carefree;sunny,0.1,0.12
+19,Empty Platform,Grey Avenue,blues,sad,0.30,70,0.15,0.40,0.75,24,1970,sad;lonely;nocturnal,0.25,0.05
+20,Glass Heartbeat,Starlit Vow,k-pop,euphoric,0.85,126,0.90,0.85,0.12,88,2020,euphoric;happy;playful,0.01,0.07
