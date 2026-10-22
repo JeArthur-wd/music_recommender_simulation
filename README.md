@@ -118,6 +118,12 @@ python -m src.main --format detailed -k 3            # list layout, top 3
 
 Modes: `genre-first` (default), `mood-first`, `energy-focused`. Run `python -m src.main --help` for all options.
 
+4. Or run the web UI (Streamlit), which opens at http://localhost:8501:
+
+```bash
+streamlit run app.py
+```
+
 ### Running Tests
 
 Run the starter tests with:
