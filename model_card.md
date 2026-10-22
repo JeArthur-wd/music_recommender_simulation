@@ -21,16 +21,21 @@ Prompts:
 
 ## 3. How the Model Works  
 
-Explain your scoring approach in simple language.  
+The recommender works like a judge giving points to every song in the catalog, one at a time, based on how well the song fits what the listener says they like.
 
-Prompts:  
+**What it knows about the listener:** their favorite genre (like pop or lofi), their favorite mood (like happy or chill), how energetic they want the music to be (on a scale from 0 = very calm to 1 = very intense), and whether they like acoustic-sounding music.
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
+**What it looks at in each song:** the song's genre, mood, energy level, and how acoustic it sounds. Each song also lists tempo, "happiness" (valence) and danceability, but these aren't scored. In this catalog, tempo and danceability mostly go up and down with energy, so counting them would just count energy again.
 
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+**How a song earns points:**
+- **Same genre as the listener's favorite:** 2 points. This is the biggest reward, because hearing the wrong genre usually feels like the app ignored you.
+- **Same mood as the listener's favorite:** 1 point.
+- **Energy close to what the listener wants:** up to 1.5 points. A song exactly at the listener's energy level gets all 1.5, and the further away it is (too calm *or* too intense), the fewer points it gets. The point is to find songs that are *close*, not just the most or least energetic ones.
+- **Acoustic sound, for listeners who like that:** a small half-point bonus.
+
+**How it picks the winners:** after every song has a score, it lines them up from highest to lowest and shows the top five. If two songs tie, the one listed earlier in the catalog goes first, so the results are the same every time. Each recommendation comes with its reasons (for example, "genre match: pop (+2.0)"), so the listener can see exactly why it was chosen.
+
+**Changes from the starter:** the starter code returned the first few songs in the file no matter who was asking. I replaced that with the point system above and the ranking step. I also expanded the catalog from 10 to 20 songs so it covers more genres and moods, including sad and quiet songs.
 
 ---
 
