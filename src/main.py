@@ -17,18 +17,60 @@ except ImportError:
 
 PROFILES = {
     # Default profile: an upbeat pop listener
-    "Pop / Happy": {
+    "High-Energy Pop": {
         "favorite_genre": "pop",
         "favorite_mood": "happy",
         "target_energy": 0.8,
         "likes_acoustic": False,
     },
     # A lofi listener who wants calm, acoustic study music
-    "Lofi / Chill": {
+    "Chill Lofi": {
         "favorite_genre": "lofi",
         "favorite_mood": "chill",
         "target_energy": 0.4,
         "likes_acoustic": True,
+    },
+    "Deep Intense Rock": {
+        "favorite_genre": "rock",
+        "favorite_mood": "intense",
+        "target_energy": 0.9,
+        "likes_acoustic": False,
+    },
+    # --- Adversarial / edge-case profiles ---
+    # Conflicting preferences: sad songs in this catalog are all low energy
+    "Sad but Hyped": {
+        "favorite_genre": "blues",
+        "favorite_mood": "sad",
+        "target_energy": 0.9,
+        "likes_acoustic": False,
+    },
+    # Genre and mood that don't exist in the catalog
+    "Ghost Genre": {
+        "favorite_genre": "indie",
+        "favorite_mood": "dreamy",
+        "target_energy": 0.5,
+        "likes_acoustic": False,
+    },
+    # Wants acoustic sound from the least acoustic genre
+    "Acoustic Headbanger": {
+        "favorite_genre": "metal",
+        "favorite_mood": "angry",
+        "target_energy": 0.95,
+        "likes_acoustic": True,
+    },
+    # Messy input: capitalization and stray spaces
+    "Messy Input": {
+        "favorite_genre": " Pop ",
+        "favorite_mood": "HAPPY",
+        "target_energy": 0.8,
+        "likes_acoustic": False,
+    },
+    # Out-of-range energy target (scale is 0.0-1.0)
+    "Energy Overload": {
+        "favorite_genre": "edm",
+        "favorite_mood": "energetic",
+        "target_energy": 1.8,
+        "likes_acoustic": False,
     },
 }
 

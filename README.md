@@ -204,11 +204,26 @@ These match my expectations for the pop/happy profile. *Sunrise City* is the onl
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+### Experiment 1: Weight Shift (energy ×2, genre ×½)
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+**Change:** `GENRE_WEIGHT` 2.0 → 1.0 and `ENERGY_WEIGHT` 1.5 → 3.0 in `src/recommender.py`; mood (1.0) and acoustic (0.5) unchanged.
+
+**Math check:** the score is still a sum of non-negative parts. For a valid energy target (0–1), the energy term stays between 0 and 3.0, so scores range from 0 to 5.5 (1.0 + 1.0 + 3.0 + 0.5). Across all 8 profiles, actual scores ranged from 0.75 to 5.44. The one exception is the out-of-range *Energy Overload* profile (target 1.8): its lowest score fell from about −0.97 to −1.95, because doubling the weight also doubled the existing bug.
+
+**What changed in the top 5:** only 2 of 8 profiles changed order. The other 6 kept exactly the same ranking, with every score roughly 1.5 points higher.
+
+| Profile | Baseline | Experiment |
+|---|---|---|
+| High-Energy Pop | #2 Gym Hero (pop/intense) 3.30, #3 Rooftop Lights (indie pop/happy) 2.44 | **#2 Rooftop Lights 3.88**, #3 Gym Hero 3.61 |
+| Acoustic Headbanger | #4 Dirt Road Summer (country, acoustic bonus) 1.45 | Dirt Road Summer drops out; **Storm Runner (rock) #4**, Glass Heartbeat #5 |
+| Sad but Hyped | Empty Platform #1 with a 2.12-point lead | Still #1, but the lead shrinks to **0.23** |
+
+**More accurate, or just different?** A little more accurate, in a narrow way:
+- **Better:** the happy indie-pop song now beats the intense workout song for a happy pop listener, which matches my intuition. The metal fan no longer gets a country song just for the acoustic bonus.
+- **Mostly no change:** the songs matching both genre and mood still win, and the energy-only filler songs (Gym Hero, Glass Heartbeat…) appear just as often. The ranking is not very sensitive to these weights, because within each group the songs already have similar energy.
+- **New risk:** genre is now worth only a third of energy. A song from any genre with perfect energy (3.0) beats a genre match (1.0) whose energy is 0.67 or more away. In *Sad but Hyped*, the only blues/sad song now wins by just 0.23, so a slightly higher energy target would push genre and mood out completely.
+
+**Decision:** I reverted to the baseline weights (2.0 / 1.0 / 1.5). The experiment fixed one ranking I disagreed with, but it made genre almost irrelevant. A gentler change, such as raising mood to 1.5, may fix the pop ranking without that side effect.
 
 ---
 
