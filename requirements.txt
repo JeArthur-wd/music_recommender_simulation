@@ -1,3 +1,6 @@
 pandas
 pytest
 streamlit
+
+# Optional: enables the Claude planner in agent mode (falls back to offline rules without it)
+# anthropic
