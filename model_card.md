@@ -103,8 +103,8 @@ I also ran one weight experiment (details in the README, "Experiments You Tried"
 | Sad but Hyped | Conflicting prefs | ⚠️ Labels beat energy; no sad *and* energetic songs exist |
 | Ghost Genre | Unknown genre/mood | ⚠️ Silent fallback to energy only |
 | Acoustic Headbanger | Contradictory | ⚠️ Acoustic bonus overrides a large energy gap |
-| Messy Input | Whitespace/case | ❌ Bug: `" Pop "` doesn't match `"pop"` |
-| Energy Overload | Out of range (1.8) | ❌ Bug: no validation, negative energy points |
+| Messy Input | Whitespace/case | ❌ Bug: `" Pop "` doesn't match `"pop"` (**fixed** by the profile guardrail, see §10) |
+| Energy Overload | Out of range (1.8) | ❌ Bug: no validation, negative energy points (**fixed**: clamped to 1.0, see §10) |
 
 #### High-Energy Pop
 
@@ -430,3 +430,24 @@ Further ideas: let users list several favorite genres, grow the catalog so each 
 - **Collaborative filtering:** simulate several users' likes and skips, recommend songs based on similar users, and compare the results to my content-based version.
 - **A bigger, real dataset:** real songs with real audio features, so genres have more than one song and the numbers aren't guesses.
 - **Great visuals and UI:** replace the terminal output with an interface where users can set their preferences with sliders and see each song's score breakdown visually.  
+
+---
+
+## 10. AI Extensions (TuneJudge 1.1)
+
+Version 1.1 adds a natural-language front end. Full details and commands are in the README, under "AI Extensions".
+
+**What changed:**
+- **Agent mode.** A listener can type a request ("something calm for studying on a rainy day, no jazz"). An agent checks the input, retrieves relevant notes from a 36-document music knowledge base (RAG), builds a profile from them, ranks songs with the same scoring engine as before, critiques its own result (genre not in catalog, repeated artist), revises up to twice, and validates the output. Every step is recorded in a trace.
+- **Planner.** Offline by default: a deterministic rule-based planner. If an Anthropic API key is set, Claude builds the profile instead, using structured output limited to catalog values. Its output goes through the same guardrails, and any failure falls back to the rules.
+- **Guardrails.** Input (empty, too long, prompt injection, off-limits), profile (normalize, clamp, drop unknown keys, warn about missing genres and moods), output (real songs, no duplicates, sorted, explained) and data (bad CSV rows skipped). This fixes the Messy Input and Energy Overload bugs from §7, and closes Future Work item 1 (§8).
+- **Logging.** A rotating log file with one structured JSON event per agent run, and emails, phone numbers and keys redacted.
+
+**Evaluation:** `python -m src.evaluate` runs 158 checks: 22 golden natural-language requests, determinism, perturbation robustness, 200 fuzzed profiles, and every preset × mode × diversity combination. All 158 pass, with an average confidence of 0.93 on the golden requests. Writing the harness exposed two real bugs, an infinite decade that crashed the guardrail and "fall asleep" retrieving study music, and both were fixed. The suite has 69 tests in total.
+
+**New limitations and risks:**
+- **Misreading the request.** The rule-based planner works on keywords. It handles simple negation and explicit numbers, but misses comparisons ("like X but sadder"), sarcasm and artist names. Every answer prints how the request was read ("I read this as: …") so the user can spot a misreading.
+- **The knowledge base is another hand-made bias.** It encodes my assumptions: study → lofi, sad → blues, party → popular EDM. A listener whose sad music is metal gets blues.
+- **Confidence is narrow.** It measures how well the catalog fits the parsed profile, not whether the profile captured what the person meant.
+- **The LLM path is not measured.** The reliability numbers are for the offline planner. The Claude planner is unit-tested with mocks only.
+- **Misuse.** Prompt-injection filtering is pattern-based and can be bypassed with rewording. The impact is limited, because the LLM can only output enum-constrained profile fields that are re-validated, and it has no tools or private data to leak.

@@ -118,6 +118,14 @@ python -m src.main --format detailed -k 3            # list layout, top 3
 
 Modes: `genre-first` (default), `mood-first`, `energy-focused`. Run `python -m src.main --help` for all options.
 
+Agent mode takes a plain-English request instead of a preset profile (see [AI Extensions](#ai-extensions-rag-agent-guardrails-logging-reliability)):
+
+```bash
+python -m src.main --ask "something calm for studying on a rainy day" --trace
+python -m src.main --ask "acoustic folk from the 2010s, no country" -k 3
+python -m src.evaluate                               # reliability report (exit code 1 on any failure)
+```
+
 4. Or run the web UI (Streamlit), which opens at http://localhost:8501:
 
 ```bash
@@ -126,13 +134,21 @@ streamlit run app.py
 
 ### Running Tests
 
-Run the starter tests with:
+Run the full suite (69 tests, about 3 seconds, fully offline) with:
 
 ```bash
 pytest
 ```
 
-You can add more tests in `tests/test_recommender.py`.
+| File | Covers |
+|---|---|
+| `tests/test_recommender.py` | Scoring, ranking, modes, diversity, advanced features |
+| `tests/test_guardrails.py` | Input, profile and output guardrails; PII redaction; bad CSV rows |
+| `tests/test_rag.py` | Tokenizer, BM25 retrieval quality, knowledge-base consistency |
+| `tests/test_agent.py` | Agent steps, self-check revisions, bounded loop, negation, LLM use and fallback |
+| `tests/test_reliability.py` | Runs the whole `src/evaluate.py` harness and requires 100% |
+
+`tests/conftest.py` disables the Claude planner and the log file so tests are deterministic.
 
 ---
 
@@ -313,6 +329,113 @@ Compare this with the Chill Lofi table above. *Focus Flow* (a second LoRoom trac
 ### 4. Summary table
 
 The default output is an ASCII table with a wrapped **Reasons** column, so every score shows how it was calculated. I used plain ASCII instead of `tabulate`, so no new dependency is needed.
+
+---
+
+## AI Extensions: RAG, Agent, Guardrails, Logging, Reliability
+
+The original system needs a hand-written profile (`favorite_genre="lofi"`, `target_energy=0.4`…). The extension lets a listener just say what they want, *"something calm for studying on a rainy day, no jazz"*, and keeps that path safe, traceable and tested.
+
+### Architecture
+
+```
+ request ──► 1. guard_input ──► 2. retrieve (RAG) ──► 3. plan ──► 4. validate ──► 5. recommend ──► 6. self_check ──► 7. guard_output ──► answer
+             src/guardrails     src/rag.py            src/agent.py  src/guardrails  src/recommender     src/agent.py       src/guardrails
+             block empty,       BM25 over             Claude (if    clamp, normalize, existing scoring   fixable issue? ──┐   songs real? no dupes?
+             injection, >500    data/knowledge_base   key) else     drop unknown keys  + ranking engine  revise + retry   │   sorted? explained?
+             chars, off-limits  .json (36 docs)       rule planner                                       (max 2) ◄────────┘
+                    │                   │
+                    ▼                   ▼                        every step → trace (--trace / UI) and logs/tunejudge.log
+                 blocked        nothing relevant → needs_clarification
+```
+
+| Module | Role |
+|---|---|
+| `src/rag.py` | Pure-Python BM25 retriever (no new dependencies) over `data/knowledge_base.json`: 36 short documents about genres, activities (study, workout, sleep, party…), contexts (rainy day, summer) and moods. Each doc has prose plus structured hints (genre, mood, energy, tags, related genres). |
+| `src/agent.py` | `RecommenderAgent.run()`: the seven-step workflow above. The **plan** step turns the request plus the retrieved docs into a profile. The **self-check** step critiques the ranking and revises the plan in a bounded loop. |
+| `src/llm.py` | Optional Claude planner (`claude-opus-5-5`, structured outputs). Used only when `anthropic` is installed and `ANTHROPIC_API_KEY` is set. Any failure falls back to the rule-based planner. |
+| `src/guardrails.py` | Input, profile and output checks (below). |
+| `src/logging_config.py` | Rotating log file, PII/secret redaction, structured JSON events. |
+| `src/evaluate.py` | Reliability harness (below). |
+
+### How retrieval grounds the answer (RAG)
+
+The retrieved documents decide what an ambiguous request means. Explicit words in the request always win; the docs fill in everything else.
+
+- *"something to help me fall asleep"* names no genre, mood or energy. Retrieval finds **Sleep and winding down**, whose hints give ambient / peaceful / energy 0.15 / instrumental.
+- *"punk please"*: there are no punk songs. The **Punk (not in catalog)** doc points to its related catalog genres, so the agent recommends rock and says why.
+- *"jazz for a dinner date"*: "jazz" comes from the request, while mood (romantic) and tags (smooth, warm) come from **Dinner and date night**.
+
+Every answer lists its sources (`Grounded in: …`). With Claude enabled, the retrieved text is passed as context, and the output schema restricts genre, mood and tags to values that exist in the catalog.
+
+### Agentic self-check
+
+After ranking, the agent critiques its own result and revises at most twice:
+
+| Problem detected | Revision |
+|---|---|
+| Planned genre isn't in the catalog | Swap to a related genre from the retrieved docs (or drop it) |
+| Same artist appears more than once | Turn on the diversity penalty and re-rank |
+
+Problems it can't fix are reported instead: **low confidence** (top score under 50% of the best possible for this profile) and **energy/genre conflicts** (e.g. "high energy blues").
+
+```
+$ python -m src.main --ask "something calm for studying on a rainy day" --trace -k 3
+Status: ok  |  Planner: rules  |  Confidence: 98%  |  Run id: d3848792
+
+Agent trace:
+1. [guard_input] passed
+2. [retrieve] Rainy days (12.39), Studying and focus (7.37), Lo-fi hip hop (4.68), Chill and relaxed (4.19)
+3. [plan] rule-based planner from 4 retrieved docs
+4. [validate] profile is valid
+5. [recommend] attempt 1: top = Library Rain (5.85), Midnight Coding (4.75), Focus Flow (4.28); confidence 0.97
+6. [self_check] revising: artist LoRoom appears more than once; turning on the diversity penalty
+7. [recommend] attempt 2: top = Library Rain (5.85), Midnight Coding (4.25), Spacewalk Thoughts (2.96); confidence 0.97
+8. [self_check] no fixable issues found
+9. [guard_output] passed
+```
+
+### Guardrails
+
+| Layer | Checks |
+|---|---|
+| **Input** (`check_request`) | Empty or non-text, over 500 characters, prompt-injection patterns ("ignore previous instructions", `<system>` tags…), off-limits requests. Unicode is normalized and whitespace collapsed. Unrelated text ("asdf qwerty") returns `needs_clarification` instead of a guess. |
+| **Profile** (`sanitize_profile`) | Strips and lowercases strings, clamps energy to 0–1, rejects NaN/inf/wrong types, drops unknown keys, fills missing fields, rounds decades, filters unknown mood tags, and warns when a genre or mood isn't in the catalog. Applied to agent output, LLM output, CLI presets and the web UI. |
+| **Exclusions** | Negated genres ("no country", "but not lofi") are removed from the candidate pool, and negated phrases are stripped before retrieval so "not too loud" doesn't pull in loud docs. |
+| **Output** (`validate_recommendations`) | Every song exists in the catalog, no duplicates, at most k results, finite scores in descending order, every pick has an explanation, no excluded genre. |
+| **Data** (`load_songs`) | CSV rows with missing fields, unparseable numbers or 0–1 features out of range are skipped and logged instead of crashing. |
+| **LLM** (`llm.py`) | Request passed as data inside `<request>` tags, enum-constrained structured output, refusal and `max_tokens` stop reasons handled, server-side fallback model enabled, and everything still re-validated by `sanitize_profile`. |
+
+The profile guardrail fixes the two bugs found during the original evaluation. *Messy Input* (`" Pop "`) now matches pop, and *Energy Overload* (target 1.8) is clamped to 1.0, so no score goes negative. Run with `--no-guardrails` to reproduce the original behavior.
+
+### Logging
+
+- Every module logs through `tunejudge.*` loggers to `logs/tunejudge.log` (rotating, 1 MB × 3). The console only shows errors, so CLI output stays clean.
+- Each agent run ends with one structured `agent_run {...}` JSON line holding the run id, request, status, planner, profile, confidence, top songs, warnings and sources. That's enough to audit or replay any answer.
+- A redaction filter masks emails, phone numbers and API-key-like strings before any handler writes them.
+- Settings: `TUNEJUDGE_LOG_LEVEL`, `TUNEJUDGE_CONSOLE_LEVEL`, `TUNEJUDGE_LOG_DIR`, `TUNEJUDGE_LOG_FILE=0`. Use `TUNEJUDGE_USE_LLM=0` to force the offline planner.
+
+### Reliability testing
+
+`python -m src.evaluate` runs 158 checks in about 1 second and exits non-zero on any failure (`--json PATH` saves a report, `-v` shows passing checks):
+
+| Suite | What it checks | Result |
+|---|---|---|
+| golden | 22 requests with expected status, genre, mood, energy range, titles in top 3, excluded genres (16 normal, 6 that must be blocked or clarified) | 22/22 |
+| consistency | Each request run 3 times gives byte-identical rankings | 15/15 |
+| robustness | Uppercase, extra whitespace, `!!!`, and "please give me … thanks" don't change the top 3 | 60/60 |
+| guardrails | 200 randomly corrupted profiles (NaN, inf, lists, wrong types, junk keys) always repaired into valid, non-negative rankings in every mode | 1/1 |
+| output | All 10 presets × 3 modes × diversity on/off pass the output guardrail | 60/60 |
+| **Total** | | **158/158 (100%)**, avg. confidence 0.93 |
+
+The harness earned its place on its first run. It found two real bugs: `preferred_decade=inf` crashed the profile guardrail (`OverflowError`), and "fall asleep" retrieved study music because "asleep" didn't match the sleep doc. A unit test then caught a third: tabs and newlines were deleted rather than turned into spaces ("CALM\tfor" → "CALMfor"). All three are fixed.
+
+### Limitations of the extension
+
+- The **rule-based planner** understands keyword-level language: simple negation ("no", "not", "without"), explicit energy numbers and decades. It misses sarcasm, comparisons ("like X but sadder") and artist names.
+- The **knowledge base** is 36 hand-written documents. Its hints are my judgment, like the song features, and requests outside its vocabulary get `needs_clarification`.
+- The **Claude planner** is implemented and unit-tested with mocks, but the reliability numbers above are for the offline planner. Run `python -m src.evaluate --llm` with a key to measure it.
+- **Confidence** measures how well the catalog fits the *parsed* profile, not whether the profile captured what the person meant.
 
 ---
 
