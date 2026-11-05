@@ -2,6 +2,13 @@ import csv
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass, asdict, field
 
+try:
+    from .logging_config import get_logger
+except ImportError:  # python src/main.py
+    from logging_config import get_logger
+
+logger = get_logger("recommender")
+
 # Algorithm Recipe weights (see README "How The System Works")
 GENRE_WEIGHT = 2.0
 MOOD_WEIGHT = 1.0
@@ -116,21 +123,40 @@ def load_songs(csv_path: str) -> List[Dict]:
     """
     Loads songs from a CSV file into dicts, converting numeric columns to int/float.
     Required by src/main.py
+
+    Data guardrail: rows that fail to parse, or whose 0-1 features are out of
+    range, are skipped and logged instead of crashing the whole run.
     """
-    print(f"Loading songs from {csv_path}...")
+    logger.info("Loading songs from %s", csv_path)
     songs = []
     with open(csv_path, newline="", encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            # Convert numeric columns so they can be used in math later
-            for name in INT_FIELDS & row.keys():
-                row[name] = int(row[name])
-            for name in FLOAT_FIELDS & row.keys():
-                row[name] = float(row[name])
-            # Multi-value columns are stored as "tag1;tag2;tag3"
-            for name in LIST_FIELDS & row.keys():
-                row[name] = [tag.strip().lower() for tag in row[name].split(";") if tag.strip()]
-            songs.append(row)
+        for line_no, row in enumerate(csv.DictReader(f), start=2):
+            try:
+                songs.append(_parse_song_row(row))
+            except (ValueError, KeyError, TypeError) as exc:
+                logger.warning("Skipping %s line %d: %s", csv_path, line_no, exc)
+    logger.info("Loaded %d songs", len(songs))
     return songs
+
+UNIT_FIELDS = {"energy", "valence", "danceability", "acousticness", "instrumentalness", "speechiness"}
+
+def _parse_song_row(row: Dict) -> Dict:
+    """Convert one CSV row to typed values and check that 0-1 features are in range."""
+    for name in ("id", "title", "artist", "genre", "mood", "energy"):
+        if not str(row.get(name) or "").strip():
+            raise ValueError(f"missing required field '{name}'")
+    # Convert numeric columns so they can be used in math later
+    for name in INT_FIELDS & row.keys():
+        row[name] = int(row[name])
+    for name in FLOAT_FIELDS & row.keys():
+        row[name] = float(row[name])
+    for name in UNIT_FIELDS & row.keys():
+        if not 0.0 <= row[name] <= 1.0:
+            raise ValueError(f"{name}={row[name]} is outside 0-1")
+    # Multi-value columns are stored as "tag1;tag2;tag3"
+    for name in LIST_FIELDS & row.keys():
+        row[name] = [tag.strip().lower() for tag in row[name].split(";") if tag.strip()]
+    return row
 
 def score_song(
     user_prefs: Dict, song: Dict, mode: ScoringMode = GENRE_FIRST
@@ -258,3 +284,22 @@ def rerank_with_diversity(
             reasons = reasons + [f"diversity penalty: {', '.join(repeats)} already listed (-{penalty:.1f})"]
         picks.append((song, adjusted, reasons))
     return picks
+
+def max_possible_score(user_prefs: Dict, mode: ScoringMode = GENRE_FIRST) -> float:
+    """The best score any song could earn for these preferences (used for confidence)."""
+    best = mode.genre_weight + mode.mood_weight
+    if "target_energy" in user_prefs:
+        best += mode.energy_weight
+    if user_prefs.get("likes_acoustic"):
+        best += mode.acoustic_bonus
+    if user_prefs.get("preferred_decade"):
+        best += DECADE_BONUS
+    if user_prefs.get("mood_tags"):
+        best += MOOD_TAG_BONUS * min(len(user_prefs["mood_tags"]), MAX_MOOD_TAGS)
+    if user_prefs.get("prefers_popular") is not None:
+        best += POPULARITY_WEIGHT
+    if user_prefs.get("wants_instrumental"):
+        best += INSTRUMENTAL_BONUS
+    if user_prefs.get("likes_rap"):
+        best += SPEECH_BONUS
+    return best
