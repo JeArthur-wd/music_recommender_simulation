@@ -1,0 +1,1054 @@
+[
+  {
+    "id": "genre-pop",
+    "type": "genre",
+    "title": "Pop",
+    "keywords": [
+      "pop",
+      "catchy",
+      "radio",
+      "chart",
+      "hits",
+      "mainstream",
+      "singalong"
+    ],
+    "text": "Pop music is catchy, upbeat and built around big hooks. It is usually high energy with low acousticness and is a safe pick for happy, feel-good listening.",
+    "hints": {
+      "genre": "pop",
+      "mood": "happy",
+      "energy": 0.8,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "happy",
+        "uplifting"
+      ],
+      "related_genres": [
+        "indie pop",
+        "k-pop"
+      ]
+    }
+  },
+  {
+    "id": "genre-lofi",
+    "type": "genre",
+    "title": "Lo-fi hip hop",
+    "keywords": [
+      "lofi",
+      "lo-fi",
+      "beats",
+      "study beats",
+      "chillhop",
+      "mellow"
+    ],
+    "text": "Lo-fi hip hop is mellow, mostly instrumental beat music with warm, slightly dusty acoustic textures. It is a classic choice for studying, coding and relaxing.",
+    "hints": {
+      "genre": "lofi",
+      "mood": "chill",
+      "energy": 0.4,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "chill",
+        "focused",
+        "cozy"
+      ],
+      "related_genres": [
+        "jazz",
+        "ambient"
+      ]
+    }
+  },
+  {
+    "id": "genre-rock",
+    "type": "genre",
+    "title": "Rock",
+    "keywords": [
+      "rock",
+      "guitar",
+      "band",
+      "riffs",
+      "alternative"
+    ],
+    "text": "Rock is guitar-driven, loud and intense. It has high energy and low acousticness and suits driving, working out or blowing off steam.",
+    "hints": {
+      "genre": "rock",
+      "mood": "intense",
+      "energy": 0.9,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "intense",
+        "driving"
+      ],
+      "related_genres": [
+        "metal"
+      ]
+    }
+  },
+  {
+    "id": "genre-ambient",
+    "type": "genre",
+    "title": "Ambient",
+    "keywords": [
+      "ambient",
+      "atmospheric",
+      "drone",
+      "soundscape",
+      "space"
+    ],
+    "text": "Ambient music is slow, spacious and almost entirely instrumental. It is very low energy and works for sleep, meditation and deep focus.",
+    "hints": {
+      "genre": "ambient",
+      "mood": "chill",
+      "energy": 0.25,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "dreamy",
+        "floating",
+        "peaceful"
+      ],
+      "related_genres": [
+        "classical",
+        "lofi"
+      ]
+    }
+  },
+  {
+    "id": "genre-jazz",
+    "type": "genre",
+    "title": "Jazz",
+    "keywords": [
+      "jazz",
+      "saxophone",
+      "swing",
+      "coffee",
+      "cafe",
+      "piano bar"
+    ],
+    "text": "Jazz is warm, relaxed and acoustic, with improvised melodies. Low to medium energy, it fits coffee shops, dinners and slow evenings.",
+    "hints": {
+      "genre": "jazz",
+      "mood": "relaxed",
+      "energy": 0.35,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "relaxed",
+        "cozy",
+        "warm"
+      ],
+      "related_genres": [
+        "blues",
+        "lofi"
+      ]
+    }
+  },
+  {
+    "id": "genre-synthwave",
+    "type": "genre",
+    "title": "Synthwave",
+    "keywords": [
+      "synthwave",
+      "retrowave",
+      "synth",
+      "80s",
+      "neon",
+      "outrun"
+    ],
+    "text": "Synthwave is retro electronic music inspired by 1980s film soundtracks. It is moody, nostalgic and nocturnal, with medium-high energy and lots of synthesizers.",
+    "hints": {
+      "genre": "synthwave",
+      "mood": "moody",
+      "energy": 0.7,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "moody",
+        "nostalgic",
+        "nocturnal"
+      ],
+      "related_genres": [
+        "edm"
+      ]
+    }
+  },
+  {
+    "id": "genre-indie-pop",
+    "type": "genre",
+    "title": "Indie pop",
+    "keywords": [
+      "indie pop",
+      "indie",
+      "bedroom pop",
+      "alt pop"
+    ],
+    "text": "Indie pop is bright, carefree pop made outside the major-label sound, often dreamy and a little quirky. It is upbeat with medium-high energy.",
+    "hints": {
+      "genre": "indie pop",
+      "mood": "happy",
+      "energy": 0.75,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "happy",
+        "dreamy",
+        "carefree"
+      ],
+      "related_genres": [
+        "pop",
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "genre-folk",
+    "type": "genre",
+    "title": "Folk",
+    "keywords": [
+      "folk",
+      "singer-songwriter",
+      "acoustic guitar",
+      "storytelling",
+      "unplugged"
+    ],
+    "text": "Folk is acoustic, lyric-focused storytelling music. It tends to be quiet, melancholic and nostalgic with very low energy.",
+    "hints": {
+      "genre": "folk",
+      "mood": "melancholic",
+      "energy": 0.25,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "melancholic",
+        "nostalgic",
+        "lonely"
+      ],
+      "related_genres": [
+        "country",
+        "blues"
+      ]
+    }
+  },
+  {
+    "id": "genre-hip-hop",
+    "type": "genre",
+    "title": "Hip-hop and rap",
+    "keywords": [
+      "hip-hop",
+      "hip hop",
+      "rap",
+      "bars",
+      "rapper",
+      "trap",
+      "boom bap"
+    ],
+    "text": "Hip-hop is rhythm-heavy music built around rapped vocals. It is confident and full of swagger, with high speechiness and medium-high energy.",
+    "hints": {
+      "genre": "hip-hop",
+      "mood": "confident",
+      "energy": 0.8,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "confident",
+        "swagger"
+      ],
+      "related_genres": [
+        "r&b"
+      ]
+    }
+  },
+  {
+    "id": "genre-rnb",
+    "type": "genre",
+    "title": "R&B",
+    "keywords": [
+      "r&b",
+      "rnb",
+      "soul",
+      "smooth",
+      "slow jam"
+    ],
+    "text": "R&B is smooth, soulful and romantic, with silky vocals and a medium-low energy groove. Good for date nights and late evenings.",
+    "hints": {
+      "genre": "r&b",
+      "mood": "romantic",
+      "energy": 0.5,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "romantic",
+        "smooth",
+        "sensual"
+      ],
+      "related_genres": [
+        "hip-hop",
+        "jazz"
+      ]
+    }
+  },
+  {
+    "id": "genre-metal",
+    "type": "genre",
+    "title": "Metal",
+    "keywords": [
+      "metal",
+      "heavy",
+      "headbang",
+      "thrash",
+      "screaming",
+      "mosh"
+    ],
+    "text": "Metal is the heaviest, loudest guitar music: angry, dark and aggressive with maximum energy and almost no acoustic sound.",
+    "hints": {
+      "genre": "metal",
+      "mood": "angry",
+      "energy": 0.95,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "angry",
+        "aggressive",
+        "dark"
+      ],
+      "related_genres": [
+        "rock"
+      ]
+    }
+  },
+  {
+    "id": "genre-classical",
+    "type": "genre",
+    "title": "Classical",
+    "keywords": [
+      "classical",
+      "orchestra",
+      "piano",
+      "sonata",
+      "symphony",
+      "composer"
+    ],
+    "text": "Classical music is acoustic, instrumental and often peaceful. Piano and string pieces are very low energy and good for reading, sleep and focus.",
+    "hints": {
+      "genre": "classical",
+      "mood": "peaceful",
+      "energy": 0.15,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "peaceful",
+        "dreamy",
+        "calm"
+      ],
+      "related_genres": [
+        "ambient"
+      ]
+    }
+  },
+  {
+    "id": "genre-country",
+    "type": "genre",
+    "title": "Country",
+    "keywords": [
+      "country",
+      "cowboy",
+      "nashville",
+      "twang",
+      "americana"
+    ],
+    "text": "Country is warm, storytelling music with acoustic guitars, often nostalgic and carefree. Medium energy, good for road trips and summer evenings.",
+    "hints": {
+      "genre": "country",
+      "mood": "nostalgic",
+      "energy": 0.58,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "nostalgic",
+        "warm",
+        "carefree"
+      ],
+      "related_genres": [
+        "folk",
+        "blues"
+      ]
+    }
+  },
+  {
+    "id": "genre-edm",
+    "type": "genre",
+    "title": "EDM and dance",
+    "keywords": [
+      "edm",
+      "dance",
+      "electronic",
+      "house",
+      "techno",
+      "rave",
+      "club",
+      "drop"
+    ],
+    "text": "EDM is electronic dance music: euphoric, driving and extremely high energy. It is made for clubs, festivals, parties and intense workouts.",
+    "hints": {
+      "genre": "edm",
+      "mood": "energetic",
+      "energy": 0.95,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "energetic",
+        "euphoric",
+        "driving"
+      ],
+      "related_genres": [
+        "synthwave",
+        "k-pop"
+      ]
+    }
+  },
+  {
+    "id": "genre-reggae",
+    "type": "genre",
+    "title": "Reggae",
+    "keywords": [
+      "reggae",
+      "island",
+      "beach",
+      "dub",
+      "caribbean",
+      "ska"
+    ],
+    "text": "Reggae is laid-back island music with an offbeat groove. It is uplifting, sunny and carefree with medium energy.",
+    "hints": {
+      "genre": "reggae",
+      "mood": "uplifting",
+      "energy": 0.55,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "uplifting",
+        "sunny",
+        "carefree"
+      ],
+      "related_genres": [
+        "pop"
+      ]
+    }
+  },
+  {
+    "id": "genre-blues",
+    "type": "genre",
+    "title": "Blues",
+    "keywords": [
+      "blues",
+      "delta",
+      "slide guitar",
+      "lament"
+    ],
+    "text": "Blues is soulful, sad and lonely music, usually slow and acoustic. Low energy, built for heartbreak and late, quiet nights.",
+    "hints": {
+      "genre": "blues",
+      "mood": "sad",
+      "energy": 0.3,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "sad",
+        "lonely",
+        "nocturnal"
+      ],
+      "related_genres": [
+        "jazz",
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "genre-kpop",
+    "type": "genre",
+    "title": "K-pop",
+    "keywords": [
+      "k-pop",
+      "kpop",
+      "korean",
+      "idol",
+      "bts",
+      "blackpink"
+    ],
+    "text": "K-pop is polished Korean pop: euphoric, playful and high energy, with big choruses and dance-ready production.",
+    "hints": {
+      "genre": "k-pop",
+      "mood": "euphoric",
+      "energy": 0.85,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "euphoric",
+        "happy",
+        "playful"
+      ],
+      "related_genres": [
+        "pop",
+        "edm"
+      ]
+    }
+  },
+  {
+    "id": "genre-punk",
+    "type": "genre",
+    "title": "Punk (not in catalog)",
+    "keywords": [
+      "punk",
+      "pop punk",
+      "hardcore",
+      "skate"
+    ],
+    "text": "Punk is fast, loud and rebellious guitar music. The catalog has no punk songs, so rock and metal are the closest matches.",
+    "hints": {
+      "genre": null,
+      "mood": "intense",
+      "energy": 0.9,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "aggressive",
+        "driving"
+      ],
+      "related_genres": [
+        "rock",
+        "metal"
+      ]
+    }
+  },
+  {
+    "id": "genre-soul-gospel",
+    "type": "genre",
+    "title": "Soul and gospel (not in catalog)",
+    "keywords": [
+      "gospel",
+      "motown",
+      "funk",
+      "neo-soul"
+    ],
+    "text": "Soul, gospel and funk are warm, vocal-led styles. The catalog has none of these, so R&B and jazz are the closest matches.",
+    "hints": {
+      "genre": null,
+      "mood": "romantic",
+      "energy": 0.55,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "warm",
+        "smooth"
+      ],
+      "related_genres": [
+        "r&b",
+        "jazz"
+      ]
+    }
+  },
+  {
+    "id": "activity-study",
+    "type": "activity",
+    "title": "Studying and focus",
+    "keywords": [
+      "study",
+      "studying",
+      "homework",
+      "focus",
+      "concentrate",
+      "coding",
+      "programming",
+      "work",
+      "reading",
+      "exam"
+    ],
+    "text": "For studying and deep work, listeners usually want calm, steady, mostly instrumental music without distracting lyrics. Low-medium energy (around 0.4) and acoustic textures help concentration.",
+    "hints": {
+      "genre": "lofi",
+      "mood": "focused",
+      "energy": 0.4,
+      "likes_acoustic": true,
+      "wants_instrumental": true,
+      "mood_tags": [
+        "focused",
+        "calm",
+        "steady"
+      ],
+      "related_genres": [
+        "ambient",
+        "classical",
+        "jazz"
+      ]
+    }
+  },
+  {
+    "id": "activity-workout",
+    "type": "activity",
+    "title": "Working out",
+    "keywords": [
+      "workout",
+      "gym",
+      "lifting",
+      "running",
+      "run",
+      "cardio",
+      "training",
+      "exercise",
+      "pump",
+      "hype"
+    ],
+    "text": "Workout music should be very high energy (0.9 or more), driving and motivational, with strong beats that keep the pace up.",
+    "hints": {
+      "genre": "pop",
+      "mood": "intense",
+      "energy": 0.92,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "motivational",
+        "driving",
+        "energetic"
+      ],
+      "related_genres": [
+        "edm",
+        "rock",
+        "hip-hop"
+      ]
+    }
+  },
+  {
+    "id": "activity-sleep",
+    "type": "activity",
+    "title": "Sleep and winding down",
+    "keywords": [
+      "sleep",
+      "sleeping",
+      "asleep",
+      "fall asleep",
+      "bedtime",
+      "insomnia",
+      "wind down",
+      "nap",
+      "lullaby",
+      "night time",
+      "tired"
+    ],
+    "text": "Music for sleep should be the quietest possible: very low energy, peaceful, acoustic and instrumental with no sudden changes.",
+    "hints": {
+      "genre": "ambient",
+      "mood": "peaceful",
+      "energy": 0.15,
+      "likes_acoustic": true,
+      "wants_instrumental": true,
+      "mood_tags": [
+        "peaceful",
+        "calm",
+        "floating"
+      ],
+      "related_genres": [
+        "classical"
+      ]
+    }
+  },
+  {
+    "id": "activity-meditation",
+    "type": "activity",
+    "title": "Meditation and yoga",
+    "keywords": [
+      "meditate",
+      "meditation",
+      "yoga",
+      "mindful",
+      "breathing",
+      "spa"
+    ],
+    "text": "Meditation and yoga call for slow, floating, peaceful sound with very low energy and no vocals.",
+    "hints": {
+      "genre": "ambient",
+      "mood": "chill",
+      "energy": 0.2,
+      "likes_acoustic": true,
+      "wants_instrumental": true,
+      "mood_tags": [
+        "peaceful",
+        "floating",
+        "dreamy"
+      ],
+      "related_genres": [
+        "classical"
+      ]
+    }
+  },
+  {
+    "id": "activity-party",
+    "type": "activity",
+    "title": "Parties and dancing",
+    "keywords": [
+      "party",
+      "dance",
+      "dancing",
+      "club",
+      "festival",
+      "pregame",
+      "celebrate"
+    ],
+    "text": "Party music is euphoric, danceable and high energy (around 0.85), usually popular tracks everyone recognizes.",
+    "hints": {
+      "genre": "edm",
+      "mood": "euphoric",
+      "energy": 0.88,
+      "likes_acoustic": false,
+      "prefers_popular": true,
+      "mood_tags": [
+        "euphoric",
+        "energetic",
+        "playful"
+      ],
+      "related_genres": [
+        "k-pop",
+        "pop"
+      ]
+    }
+  },
+  {
+    "id": "activity-roadtrip",
+    "type": "activity",
+    "title": "Road trips and driving",
+    "keywords": [
+      "road trip",
+      "roadtrip",
+      "drive",
+      "driving",
+      "car",
+      "highway",
+      "cruise"
+    ],
+    "text": "Road trip music is carefree, driving and medium-high energy. Daytime drives suit sunny, nostalgic songs; night drives suit moody synth music.",
+    "hints": {
+      "genre": "country",
+      "mood": "nostalgic",
+      "energy": 0.65,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "driving",
+        "carefree",
+        "nostalgic"
+      ],
+      "related_genres": [
+        "synthwave",
+        "rock"
+      ]
+    }
+  },
+  {
+    "id": "activity-night-drive",
+    "type": "activity",
+    "title": "Late-night drives",
+    "keywords": [
+      "night drive",
+      "late night",
+      "midnight",
+      "city lights",
+      "neon",
+      "nocturnal",
+      "3am"
+    ],
+    "text": "Late-night listening is moody and nocturnal: medium energy synth or lo-fi music with a nostalgic feel.",
+    "hints": {
+      "genre": "synthwave",
+      "mood": "moody",
+      "energy": 0.6,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "nocturnal",
+        "moody",
+        "nostalgic"
+      ],
+      "related_genres": [
+        "lofi",
+        "edm"
+      ]
+    }
+  },
+  {
+    "id": "activity-dinner",
+    "type": "activity",
+    "title": "Dinner and date night",
+    "keywords": [
+      "dinner",
+      "date",
+      "date night",
+      "romantic",
+      "candlelight",
+      "wine",
+      "anniversary",
+      "dinner party",
+      "hosting",
+      "dinner guests"
+    ],
+    "text": "Date night and dinner music is smooth, romantic and medium-low energy, with warm vocals and jazz or R&B grooves.",
+    "hints": {
+      "genre": "r&b",
+      "mood": "romantic",
+      "energy": 0.45,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "romantic",
+        "smooth",
+        "warm"
+      ],
+      "related_genres": [
+        "jazz"
+      ]
+    }
+  },
+  {
+    "id": "activity-coffee",
+    "type": "activity",
+    "title": "Coffee shop and slow mornings",
+    "keywords": [
+      "coffee",
+      "cafe",
+      "morning",
+      "sunday",
+      "brunch",
+      "cozy"
+    ],
+    "text": "Coffee shop and slow-morning music is cozy, warm and relaxed: low energy acoustic jazz or lo-fi.",
+    "hints": {
+      "genre": "jazz",
+      "mood": "relaxed",
+      "energy": 0.35,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "cozy",
+        "warm",
+        "relaxed"
+      ],
+      "related_genres": [
+        "lofi",
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "context-rainy",
+    "type": "context",
+    "title": "Rainy days",
+    "keywords": [
+      "rain",
+      "rainy",
+      "storm",
+      "gloomy",
+      "cloudy",
+      "grey"
+    ],
+    "text": "Rainy-day music is cozy and calm: low energy lo-fi, jazz or folk with acoustic textures.",
+    "hints": {
+      "genre": "lofi",
+      "mood": "chill",
+      "energy": 0.35,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "rainy",
+        "cozy",
+        "calm"
+      ],
+      "related_genres": [
+        "jazz",
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "context-summer",
+    "type": "context",
+    "title": "Summer and beach days",
+    "keywords": [
+      "summer",
+      "beach",
+      "sunny",
+      "sunshine",
+      "vacation",
+      "pool",
+      "tropical"
+    ],
+    "text": "Summer music is sunny, uplifting and carefree with medium energy: reggae, pop and country all fit.",
+    "hints": {
+      "genre": "reggae",
+      "mood": "uplifting",
+      "energy": 0.6,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "sunny",
+        "carefree",
+        "uplifting"
+      ],
+      "related_genres": [
+        "pop",
+        "country"
+      ]
+    }
+  },
+  {
+    "id": "mood-sad",
+    "type": "mood",
+    "title": "Sad and heartbroken",
+    "keywords": [
+      "sad",
+      "heartbreak",
+      "heartbroken",
+      "breakup",
+      "cry",
+      "crying",
+      "lonely",
+      "depressed",
+      "down",
+      "blue"
+    ],
+    "text": "When listeners feel sad or heartbroken they often want slow, lonely, melancholic songs with low energy and acoustic sound, such as blues or folk.",
+    "hints": {
+      "genre": "blues",
+      "mood": "sad",
+      "energy": 0.3,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "sad",
+        "lonely",
+        "melancholic"
+      ],
+      "related_genres": [
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "mood-happy",
+    "type": "mood",
+    "title": "Happy and upbeat",
+    "keywords": [
+      "happy",
+      "upbeat",
+      "cheerful",
+      "joyful",
+      "good mood",
+      "feel good",
+      "bright"
+    ],
+    "text": "Happy, upbeat listening favors bright pop with high energy and uplifting, sunny lyrics.",
+    "hints": {
+      "genre": "pop",
+      "mood": "happy",
+      "energy": 0.8,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "happy",
+        "sunny",
+        "uplifting"
+      ],
+      "related_genres": [
+        "indie pop",
+        "k-pop"
+      ]
+    }
+  },
+  {
+    "id": "mood-angry",
+    "type": "mood",
+    "title": "Angry and venting",
+    "keywords": [
+      "angry",
+      "rage",
+      "mad",
+      "furious",
+      "vent",
+      "frustrated",
+      "aggressive"
+    ],
+    "text": "Angry listeners often want loud, aggressive, dark music with maximum energy to vent: metal and hard rock.",
+    "hints": {
+      "genre": "metal",
+      "mood": "angry",
+      "energy": 0.95,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "angry",
+        "aggressive",
+        "dark"
+      ],
+      "related_genres": [
+        "rock"
+      ]
+    }
+  },
+  {
+    "id": "mood-chill",
+    "type": "mood",
+    "title": "Chill and relaxed",
+    "keywords": [
+      "chill",
+      "relax",
+      "relaxing",
+      "calm",
+      "mellow",
+      "laid back",
+      "unwind",
+      "easy"
+    ],
+    "text": "Chill, relaxed listening means low-medium energy, smooth and calm songs, often lo-fi, ambient or jazz.",
+    "hints": {
+      "genre": "lofi",
+      "mood": "chill",
+      "energy": 0.35,
+      "likes_acoustic": true,
+      "mood_tags": [
+        "chill",
+        "calm",
+        "relaxed"
+      ],
+      "related_genres": [
+        "ambient",
+        "jazz"
+      ]
+    }
+  },
+  {
+    "id": "mood-nostalgic",
+    "type": "mood",
+    "title": "Nostalgic and throwback",
+    "keywords": [
+      "nostalgic",
+      "nostalgia",
+      "throwback",
+      "memories",
+      "old days",
+      "retro",
+      "childhood"
+    ],
+    "text": "Nostalgic listening leans on older decades and warm, wistful songs: country, folk and retro synthwave.",
+    "hints": {
+      "genre": "country",
+      "mood": "nostalgic",
+      "energy": 0.55,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "nostalgic",
+        "warm"
+      ],
+      "related_genres": [
+        "synthwave",
+        "folk"
+      ]
+    }
+  },
+  {
+    "id": "mood-confident",
+    "type": "mood",
+    "title": "Confident and hyped up",
+    "keywords": [
+      "confident",
+      "swagger",
+      "boss",
+      "flex",
+      "hyped",
+      "pump up"
+    ],
+    "text": "Confident, hyped-up listening favors hip-hop with swagger and strong rhythm, at medium-high energy.",
+    "hints": {
+      "genre": "hip-hop",
+      "mood": "confident",
+      "energy": 0.8,
+      "likes_acoustic": false,
+      "mood_tags": [
+        "confident",
+        "swagger"
+      ],
+      "related_genres": [
+        "pop"
+      ]
+    }
+  }
+]
