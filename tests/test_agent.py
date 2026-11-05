@@ -155,3 +155,13 @@ def test_only_negations_asks_for_clarification(agent):
     assert result.status == "needs_clarification"
     assert not result.recommendations
 
+
+def test_cli_survives_emoji_on_a_non_utf8_console(tmp_path):
+    import os
+    import subprocess
+    import sys
+    env = {**os.environ, "PYTHONIOENCODING": "cp1252", "TUNEJUDGE_USE_LLM": "0", "TUNEJUDGE_LOG_FILE": "0"}
+    proc = subprocess.run([sys.executable, "-m", "src.main", "--ask", "🎵 happy vibes", "-k", "1"],
+                          capture_output=True, env=env)
+    assert proc.returncode == 0, proc.stderr.decode(errors="replace")
+    assert b"Status: ok" in proc.stdout

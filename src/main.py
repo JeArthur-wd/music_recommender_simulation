@@ -10,12 +10,19 @@ You will implement the functions in recommender.py:
 """
 
 import argparse
+import sys
 import textwrap
 
 try:
-    from .recommender import MODES, load_songs, recommend_songs  # python -m src.main
+    from .guardrails import sanitize_profile  # python -m src.main
+    from .logging_config import get_logger
+    from .recommender import MODES, load_songs, recommend_songs
 except ImportError:
-    from recommender import MODES, load_songs, recommend_songs  # python src/main.py
+    from guardrails import sanitize_profile  # python src/main.py
+    from logging_config import get_logger
+    from recommender import MODES, load_songs, recommend_songs
+
+logger = get_logger("cli")
 
 REASON_WIDTH = 52
 
@@ -168,21 +175,76 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--format", choices=["table", "detailed"], default="table",
                         help="output layout (default: table)")
     parser.add_argument("-k", type=int, default=5, help="number of recommendations")
-    return parser.parse_args()
+    parser.add_argument("--ask", metavar="TEXT",
+                        help='agent mode: describe what you want, e.g. --ask "calm music for studying"')
+    parser.add_argument("--trace", action="store_true",
+                        help="with --ask, print each step the agent took")
+    parser.add_argument("--no-llm", action="store_true",
+                        help="with --ask, use the offline rule-based planner even if Claude is available")
+    parser.add_argument("--no-guardrails", action="store_true",
+                        help="score preset profiles exactly as written (reproduces the original bugs)")
+    args = parser.parse_args()
+    if args.k < 1:
+        parser.error("-k must be at least 1")
+    return args
+
+
+def run_agent(args: argparse.Namespace, songs: list, mode) -> None:
+    """Agent mode: free-text request -> RAG + planning + self-check -> recommendations."""
+    try:
+        from .agent import RecommenderAgent
+    except ImportError:
+        from agent import RecommenderAgent
+
+    agent = RecommenderAgent(songs, use_llm=False if args.no_llm else None)
+    result = agent.run(args.ask, k=args.k, mode=mode, diversity=args.diverse)
+    print(f'Request: "{result.request}"')
+    print(f"Status: {result.status}  |  Planner: {result.planner or '-'}  |  "
+          f"Confidence: {result.confidence:.0%}  |  Run id: {result.run_id}")
+    print()
+
+    if args.trace:
+        print("Agent trace:")
+        for i, step in enumerate(result.trace, start=1):
+            print(textwrap.fill(f"{i}. [{step.step}] {step.detail}", width=100, subsequent_indent="     "))
+        print()
+
+    if result.status != "ok":
+        print(result.message)
+        return
+    print(textwrap.fill(result.message, width=100))
+    for warning in result.warnings:
+        print(textwrap.fill(f"! {warning}", width=100, subsequent_indent="  "))
+    print()
+    show = print_table if args.format == "table" else print_recommendations
+    show("Agent", result.profile, result.recommendations)
 
 
 def main() -> None:
     """Load the catalog and print the top k recommendations for each profile."""
+    # Windows consoles (cp1252) can't print emoji echoed back from a request; replace, don't crash
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="replace")
     args = parse_args()
     mode = MODES[args.mode]
     songs = load_songs("data/songs.csv")
     print(f"Loaded songs: {len(songs)}")
     print(f"Mode: {mode.name}  |  Diversity: {'on' if args.diverse else 'off'}\n")
 
+    if args.ask is not None:
+        run_agent(args, songs, mode)
+        return
+
     show = print_table if args.format == "table" else print_recommendations
     profiles = {args.profile: PROFILES[args.profile]} if args.profile else PROFILES
     for name, user_prefs in profiles.items():
+        if not args.no_guardrails:
+            user_prefs, warnings = sanitize_profile(user_prefs, songs)
+            for warning in warnings:
+                print(f"! guardrail ({name}): {warning}")
         recommendations = recommend_songs(user_prefs, songs, args.k, mode, args.diverse)
+        logger.info("profile=%s mode=%s top=%s", name, mode.name,
+                    [song["title"] for song, _, _ in recommendations])
         show(name, user_prefs, recommendations)
 
 
