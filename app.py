@@ -7,6 +7,9 @@ Run with:  streamlit run app.py
 import pandas as pd
 import streamlit as st
 
+from src.agent import RecommenderAgent
+from src.guardrails import sanitize_profile
+from src.llm import llm_available
 from src.main import PROFILES
 from src.recommender import MODES, load_songs, recommend_songs
 
@@ -20,6 +23,71 @@ st.set_page_config(page_title="TuneJudge", page_icon="🎧", layout="wide")
 def get_songs() -> list:
     """Load the catalog once and reuse it across reruns."""
     return load_songs("data/songs.csv")
+
+
+@st.cache_resource
+def get_agent() -> RecommenderAgent:
+    """Build the agent (and its knowledge-base index) once per server process."""
+    return RecommenderAgent(get_songs())
+
+
+def render_results(results: list) -> None:
+    """Show a ranked list as a table plus one expandable explanation per song."""
+    table = pd.DataFrame([
+        {
+            "#": rank,
+            "Title": song["title"],
+            "Artist": song["artist"],
+            "Genre": song["genre"],
+            "Mood": song["mood"],
+            "Score": round(score, 2),
+            "Reasons": explanation,
+        }
+        for rank, (song, score, explanation) in enumerate(results, start=1)
+    ])
+    st.dataframe(table, hide_index=True, width="stretch")
+
+    st.subheader("Why these songs?")
+    for rank, (song, score, explanation) in enumerate(results, start=1):
+        with st.expander(f"{rank}. {song['title']} — {song['artist']}  ·  {score:.2f} pts",
+                         expanded=rank == 1):
+            for reason in explanation.split("; "):
+                st.markdown(f"- {reason}")
+
+
+def agent_tab(mode, diversity: bool, k: int) -> None:
+    """Free-text requests handled by the RAG + self-checking agent."""
+    st.write(
+        "Describe what you want in your own words. The agent retrieves matching notes from its "
+        "music knowledge base, builds a listener profile, checks its own results, and revises "
+        "if something looks off."
+    )
+    planner = "Claude (with offline fallback)" if llm_available() else "offline rule-based planner"
+    st.caption(f"Planner: **{planner}** · uses the scoring mode, diversity and k from the sidebar")
+
+    request = st.text_input("What do you want to listen to?",
+                            placeholder="something calm for studying on a rainy day, no jazz")
+    if not request:
+        return
+    result = get_agent().run(request, k=k, mode=mode, diversity=diversity)
+
+    if result.status == "blocked":
+        st.error(result.message)
+    elif result.status != "ok":
+        st.warning(result.message)
+    else:
+        st.success(result.message)
+        st.metric("Confidence", f"{result.confidence:.0%}",
+                  help="Top song's score as a share of the best score possible for this profile")
+        for warning in result.warnings:
+            st.info(warning)
+        render_results(result.recommendations)
+
+    with st.expander(f"Agent trace · run {result.run_id}"):
+        for i, step in enumerate(result.trace, start=1):
+            st.markdown(f"{i}. **{step.step}** — {step.detail}")
+        if result.profile:
+            st.json(result.profile)
 
 
 def with_option(options: list, value: str) -> list:
@@ -120,8 +188,13 @@ def main() -> None:
         "ranks them, and shows exactly where each point came from."
     )
 
+    prefs, guardrail_warnings = sanitize_profile(prefs, songs)
     results = recommend_songs(prefs, songs, k, mode, diversity)
-    tab_results, tab_catalog = st.tabs(["Recommendations", f"Catalog ({len(songs)} songs)"])
+    tab_agent, tab_results, tab_catalog = st.tabs(
+        ["Ask the agent", "Profile recommendations", f"Catalog ({len(songs)} songs)"])
+
+    with tab_agent:
+        agent_tab(mode, diversity, k)
 
     with tab_results:
         st.caption(
@@ -129,26 +202,9 @@ def main() -> None:
             f"Genre **{prefs['favorite_genre']}**, mood **{prefs['favorite_mood']}**, "
             f"energy **{prefs['target_energy']:.2f}**"
         )
-        table = pd.DataFrame([
-            {
-                "#": rank,
-                "Title": song["title"],
-                "Artist": song["artist"],
-                "Genre": song["genre"],
-                "Mood": song["mood"],
-                "Score": round(score, 2),
-                "Reasons": explanation,
-            }
-            for rank, (song, score, explanation) in enumerate(results, start=1)
-        ])
-        st.dataframe(table, hide_index=True, width="stretch")
-
-        st.subheader("Why these songs?")
-        for rank, (song, score, explanation) in enumerate(results, start=1):
-            with st.expander(f"{rank}. {song['title']} — {song['artist']}  ·  {score:.2f} pts",
-                             expanded=rank == 1):
-                for reason in explanation.split("; "):
-                    st.markdown(f"- {reason}")
+        for warning in guardrail_warnings:
+            st.info(warning)
+        render_results(results)
 
     with tab_catalog:
         catalog = pd.DataFrame(songs)
